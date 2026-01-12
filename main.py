@@ -1,17 +1,23 @@
+# Optional: add contact me email functionality (Day 60)
+# import smtplib
+import os
 from datetime import date
-from flask import Flask, abort, render_template, redirect, url_for, flash, request
+from functools import wraps
+
+import dotenv
+from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
-from functools import wraps
-from werkzeug.security import generate_password_hash, check_password_hash
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
-# Optional: add contact me email functionality (Day 60)
-# import smtplib
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from forms import CommentForm, CreatePostForm, LoginForm, RegisterForm
+
+dotenv.load_dotenv()
 
 
 '''
@@ -29,7 +35,8 @@ This will install the packages from the requirements.txt for this project.
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
